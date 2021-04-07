@@ -9,7 +9,7 @@ quantities) and retailers to wholesalers (warehouse maintaining people) with the
 mandatory functionalities
 Hierarchy of Users:
 Customers -> Retailers -> Wholesalers
-# Roles of Users: (Mandatory but not limited to)
+## Roles of Users: (Mandatory but not limited to)
  Customers: selection of items (by search, by using filters or by browsing), adding to cart,
 place order, payment of order, feedback/queries.
  Retailers: adding new items, deleting items, deciding the price of items while adding,
@@ -23,7 +23,7 @@ item quantities (after every order placed by retailer) etc.
 
 
 Functionalities:
-# Module 1: Registration and Sign-Up
+## Module 1: Registration and Sign-Up
 Registration and signup using username and password or any social media (Gmail, Facebook login
 or Instagram)
 Login must be done using OTP verification (phone/email) every time.
@@ -33,7 +33,7 @@ username, password, retype password, type of user Select one of three, Location 
 enabled with Google API)
  Signup Page
 
-# Module 2: Dashboards for every type of users
+## Module 2: Dashboards for every type of users
 Dashboard should have all categories of items food and other items (Vegetables, Readymade
 foods, grocery). Feel free to identify your categories and sub-categories.
 When pressed on a category, user must navigate to a page having various options/ items for that
@@ -42,13 +42,13 @@ Every item should have the following fields: cost, in stock/not in stock, if not
 available at what date next. (Same as all e-commerce sites)
 All categories and items of the category should be represented with appropriate images.
 
-# Module 3: Search Module/Navigation Module
+## Module 3: Search Module/Navigation Module
 Once the user selects the item with required quantity, API must show all the shops having the
 required quantity with location, cost per unit and total cost.
 Include a location distance filter and all the shops should be listed area wise. (should have but not
 limited to)
 
-# Module 4: Place order and status of order
+## Module 4: Place order and status of order
 User (Customer/ Retailer) can make the purchase either online or offline mode.
 If purchase is to be made offline mode, the time and date should be stored as an event in calendar
 and the event should be notified to the user before 30 minutes. You can think of notifying the
