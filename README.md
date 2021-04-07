@@ -1,22 +1,20 @@
 # OOPS_Project
-Consumers will be looking for the ability to easily filter items
-by dietary preference 
-category pages and search results to adapt based on their personal
-browsing and purchase history. 
-(Android/Web based/Stand-alone) for e-marketing that connects customers (individuals who shop
+* Consumers will be looking for the ability to easily filter items by dietary preference 
+* category pages and search results to adapt based on their personal browsing and purchase history. 
+* (Android/Web based/Stand-alone) for e-marketing that connects customers (individuals who shop
 for home purpose) to retailers (people dealing with multiple items who stores items in large
 quantities) and retailers to wholesalers (warehouse maintaining people) with the below mentioned
 mandatory functionalities
-Hierarchy of Users:
+## Hierarchy of Users:
 Customers -> Retailers -> Wholesalers
 ## Roles of Users: (Mandatory but not limited to)
- Customers: selection of items (by search, by using filters or by browsing), adding to cart,
+* Customers: selection of items (by search, by using filters or by browsing), adding to cart,
 place order, payment of order, feedback/queries.
- Retailers: adding new items, deleting items, deciding the price of items while adding,
+* Retailers: adding new items, deleting items, deciding the price of items while adding,
 maintaining record of each customer (items they have bought, transactions they have done
 till now etc..), update item quantities (after every order placed by customer), place order,
 order payment, feedback/queries, etc.
- Wholesalers: adding new items, deleting items, deciding the price of items while adding,
+* Wholesalers: adding new items, deleting items, deciding the price of items while adding,
 adding or deleting retailers, maintaining record of each retailer (items they have bought,
 transactions they have done till now etc..), items that they supply to the retailers, update
 item quantities (after every order placed by retailer) etc.
@@ -28,10 +26,10 @@ Registration and signup using username and password or any social media (Gmail, 
 or Instagram)
 Login must be done using OTP verification (phone/email) every time.
 A Customer can belong to any one or multiple user categories.
- Registration page should have (but not limited to) following fields:
+* Registration page should have (but not limited to) following fields:
 username, password, retype password, type of user Select one of three, Location (better if
 enabled with Google API)
- Signup Page
+* Signup Page
 
 ## Module 2: Dashboards for every type of users
 Dashboard should have all categories of items food and other items (Vegetables, Readymade
