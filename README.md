@@ -70,3 +70,7 @@ After delivery of the product, a SMS/e-mail should be sent to the user using the
 number/e-mail id for feedback of the product and delivery as well.
 The feedback of the product has to be updated periodically on the page of the concerned item.
 If multiple items are orders, feedback has to be taken for each product individually
+
+# Features
+1. Payment gateways
+2. Recommendation system
