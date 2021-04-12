@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+    
+{% block content %}
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!--filter-->
+    <div class="col-lg-3">
+      
+        <div class="list-group">
+          <a href="/" class="list-group-item list-group-item-action">All Products</a>
+          {% for category in categories %}
+          <a href="/?category={{category.id}}" class="list-group-item list-group-item-action">{{category.name}}</a>
+          {% endfor %}
+        </div>
+    </div>
+
+
+
+    <div id='products' class="col-lg-7 ">
+      <div class="row mx-auto">
+        {% for product in products %}
+      <div class="card mx-auto mb-5" style="width: 18rem;">
+        <img src="{{product.image.url}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{product.name}}</h5>
+          <p class="card-text"><b>{{product.price}}</b></p>
+          <form action="/" method="POST">
+            {% csrf_token %}
+            <input hidden type="text" name="product" value='{{product.id}}'>
+            <input type="submit" class="btn btn-light border btn" value="Add to Cart">
+          </form>
+        </div>
+      </div>  
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+   
+{% endblock %}

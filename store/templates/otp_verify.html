@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+<div class="p-4 m-4">
+    <div class="col-lg-6 mx-auto border rounded mt-4 pt-5">
+      <h3 class="alert alert-light border rounded">Login</h3>
+      <form action="/otp_verify" method= "POST">
+        {% csrf_token %}
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+         {{error}}
+        </div>
+       {% endif %}
+        <div class="form-group">
+        <div class="form-group">
+          <label for="">Enter the 6 digit otp</label>
+          <input type="otp" name="otp" id="" value="" class="form-control" placeholder="" >
+          
+        </div>
+
+     
+        <div class="formgroup mt-3 mx-auto">
+          <input class="btn btn-sm btn-info" type="submit" value="Login">
+        </div>
+      </form>
+    </div>
+</div>
+</div>
+
+{% endblock %}
