@@ -77,9 +77,18 @@ def otp_verify(request):
             return render(request,'otp_verify.html')
 
 
+
+def logout(request):
+    request.session.clear()
+    return redirect('login')
+
 class Index(View):
     def get(self,request):
         products = None
+        cart=request.session.get('cart')
+        if not cart:
+            request.session['cart']={}
+
         categories=Categorie.get_all_categories()
         categoryID=request.GET.get('category')
         if categoryID:
@@ -94,16 +103,25 @@ class Index(View):
         
     def post(self,request):
         product=request.POST.get('product')
+        remove=request.POST.get('remove')
         cart=request.session.get('cart')
         if cart:
             quantity=cart.get(product)
             if quantity:
-                cart[product]=1+quantity
+                if remove:
+                    if(quantity<=1):
+                        cart.pop(product)
+                    else:
+                        cart[product]=quantity-1
+
+                else:
+                    cart[product]=1+quantity
             else:
                 cart[product]=1
         else:
             cart={}
             cart[product]=1
+        
         
         request.session['cart']=cart
         return redirect('homepage')
@@ -126,7 +144,8 @@ class Login(View):
             else:
                 request.session['customer_id']=customer.id
                 request.session['email']=customer.email
-               
+                request.session['role']=customer.group_name
+                print("current user role is ",request.session['role'] )
                 user_phone="+91"+customer.phone
                 send_sms(msg_body,"+17722131635", user_phone )
                 return redirect('otp_verification')
@@ -176,10 +195,24 @@ class Signup(View):
             print(my_group1)
             #my_group1.user_set.add(customer)
             customer.register()
-            return redirect('homepage')
+            request.session['customer_id']=customer.id
+            request.session['email']=customer.email
+            request.session['role']=customer.group_name
+            if(request.session['role']=='wholesaler'):
+                return redirect('wholesaler_dashboard')
+            else if(request.session['role']== 'retailer'):
+                return redirect('retailer_dashboard')
+            else:
+                return redirect('homepage')
         else:
             data= {
             'error' : error_message,'values':value
             }
             return render(request,'signup.html' , data)
-        
+
+class Cart(View):
+    def get(self , request):
+        ids = list(request.session.get('cart').keys())
+        products = Product.get_products_by_id(ids)
+        print(products)
+        return render(request , 'cart.html' , {'products' : products} )
