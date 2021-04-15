@@ -15,7 +15,7 @@ def cart_count(product,cart):
     keys= cart.keys()
     #print(keys)
     for id in keys:
-        print(id, "product id")
+        #print(id, "product id")
         if int(id) == product.id:
             return cart.get(id)
     return 0;

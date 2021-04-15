@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import signup,Login,Signup,otp_verify,Index,logout,Cart
+from .views import signup,Login,Signup,otp_verify,Index,logout,Cart,CheckOut,OrderView,Locate,my_view_that_updates_pieFact,Wholesaler_dashboard
+from .views import add_products
 from django.conf.urls import url
+from store.middlewares.auth import auth_middleware
+from django.utils.decorators import method_decorator
+
 
 urlpatterns = [
     path('', Index.as_view() , name="homepage"),
@@ -24,5 +28,12 @@ urlpatterns = [
     path('otp_verify',otp_verify,name="otp_verification"),
     path('login', Login.as_view(), name='login'),
     path('logout',logout,name='logout'),
-    path('cart', Cart.as_view(),name="cart")
+    path('cart', Cart.as_view(),name="cart"),
+    path('check-out', CheckOut.as_view(),name="checkout"),
+    path('orders',auth_middleware( OrderView.as_view()),name="orders"),
+    path('locate',Locate.as_view(),name="locate"),
+    path('my_view_that_updates_pieFact', my_view_that_updates_pieFact),
+    path('wholesaler_dashboard' ,Wholesaler_dashboard.as_view(),name="wholesaler_dashboard"),
+    path('add_products', add_products.as_view(),name='add_products')
+
 ]

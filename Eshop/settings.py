@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import os
 
 from pathlib import Path
 
@@ -39,10 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'django.contrib.sites',
-    #otp login
-    'phone_login',
-    'rest_framework',
-
+    #otp
+    "django_google_maps",  
+    "geoposition",
     #oauth login
     'allauth',
     'allauth.account',
@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                "django.template.context_processors.media",
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -116,10 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-AUTHENTICATION_BACKENDS = [
-    'phone_login.backends.phone_backend.PhoneBackend',
-    'django.contrib.auth.backends.ModelBackend'
-]
 
 
 
@@ -142,7 +139,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = "/abcd/"
-MEDIA_ROOT = BASE_DIR
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -160,6 +157,7 @@ SENDSMS_AUTH_TOKEN = 'xxxxxxxx'
 PHONE_LOGIN_ATTEMPTS = 10
 PHONE_LOGIN_OTP_LENGTH = 6
 PHONE_LOGIN_OTP_HASH_ALGORITHM = 'sha256'
+
 def verified_callback(user):
     user.is_active = True
 
@@ -192,3 +190,15 @@ EMAIL_USE_TLS = True
  # token 5e91cdc06c825aff50d63b940fa4552f
  #
  # +17722131635
+
+GOOGLE_MAPS_API_KEY="AIzaSyBktZHZNrB2Er0ijw9GMx12k4KuLXP-YCw"
+GEOPOSITION_GOOGLE_MAPS_API_KEY="AIzaSyBktZHZNrB2Er0ijw9GMx12k4KuLXP-YCw"
+
+GEOPOSITION_MAP_OPTIONS = {
+    'minZoom': 3,
+    'maxZoom': 15,
+}
+
+GEOPOSITION_MARKER_OPTIONS = {
+    'cursor': 'move'
+}

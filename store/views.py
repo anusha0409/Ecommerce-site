@@ -3,10 +3,19 @@ from django.http import HttpResponse
 from .models.product import Product
 from .models.category import Categorie
 from .models.customer import Customer
+from .models.orders import Order
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from .sms import send_sms,gen_otp
+from django.views.decorators.csrf import csrf_protect
+from store.middlewares.auth import auth_middleware
+from django.utils.decorators import method_decorator
+from django.http import HttpResponseRedirect
+from django.core.files.storage import FileSystemStorage
+
+
+
 # Create your views here.
 
 
@@ -72,7 +81,12 @@ def otp_verify(request):
         postData=request.POST
         otp=postData.get("otp")
         if otp == random_otp:
-            return redirect('homepage')
+                if(request.session['role']=='wholesaler'):
+                    return redirect('wholesaler_dashboard')
+                elif(request.session['role']== 'retailer'):
+                    return redirect('retailer_dashboard')
+                else:
+                    return redirect('homepage')
         else:
             return render(request,'otp_verify.html')
 
@@ -98,7 +112,7 @@ class Index(View):
         data={}
         data['products']=products
         data['categories']=categories
-        print(" you are :" ,request.session.get('email'))
+        #print(" you are :" ,request.session.get('email'))
         return render(request , 'index.html' , data)
         
     def post(self,request):
@@ -145,6 +159,7 @@ class Login(View):
                 request.session['customer_id']=customer.id
                 request.session['email']=customer.email
                 request.session['role']=customer.group_name
+                request.session['user_name']=customer.first_name
                 print("current user role is ",request.session['role'] )
                 user_phone="+91"+customer.phone
                 send_sms(msg_body,"+17722131635", user_phone )
@@ -167,6 +182,8 @@ class Signup(View):
         retypepassword=postData.get('retypepassword')
         location=postData.get('location')
         group_name=postData.get('group_name')
+        latitude=request.session['latitude']
+        longitude=request.session['longitude']
         print("group name is   ",group_name)
         #validation
         error_message = None
@@ -190,7 +207,7 @@ class Signup(View):
 
         #created object
         if not error_message:
-            customer= Customer(first_name=first_name,last_name=last_name, phone=phone, email=email,password=password,location=location, group_name=group_name)
+            customer= Customer(first_name=first_name,last_name=last_name, phone=phone, email=email,password=password,location=location, group_name=group_name, latitude=latitude, longitude=longitude)
             my_group1 = Group.objects.get(name=group_name) 
             print(my_group1)
             #my_group1.user_set.add(customer)
@@ -198,9 +215,10 @@ class Signup(View):
             request.session['customer_id']=customer.id
             request.session['email']=customer.email
             request.session['role']=customer.group_name
+            request.session['user_name']=customer.first_name
             if(request.session['role']=='wholesaler'):
                 return redirect('wholesaler_dashboard')
-            else if(request.session['role']== 'retailer'):
+            elif(request.session['role']== 'retailer'):
                 return redirect('retailer_dashboard')
             else:
                 return redirect('homepage')
@@ -211,8 +229,93 @@ class Signup(View):
             return render(request,'signup.html' , data)
 
 class Cart(View):
+    @method_decorator(auth_middleware)
     def get(self , request):
         ids = list(request.session.get('cart').keys())
         products = Product.get_products_by_id(ids)
         print(products)
         return render(request , 'cart.html' , {'products' : products} )
+
+
+class CheckOut(View):
+    def post(self, request):
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        customer = request.session.get('customer_id')
+
+        cart = request.session.get('cart')
+        products = Product.get_products_by_id(list(cart.keys()))
+        print(address, phone, customer, cart, products)
+
+        for product in products:
+            print(cart.get(str(product.id)))
+            order = Order(customer=Customer(id=customer),
+                          product=product,
+                          price=product.price,
+                          address=address,
+                          phone=phone,
+                          quantity=cart.get(str(product.id)))
+            order.placeOrder()
+        request.session['cart'] = {}
+
+        return redirect('cart')
+
+
+class OrderView(View):
+    def get(self , request ):
+        customer = request.session.get('customer_id')
+        orders = Order.get_orders_by_customer(customer)
+        print(orders)
+        return render(request , 'orders.html'  , {'orders' : orders})
+
+class Locate(View):
+    def get(self ,request):
+        return render(request,"locate.html")
+
+
+
+
+
+class Wholesaler_dashboard(View):
+    def get(self ,request):
+        return  render(request,'wholesaler_dashboard.html')
+
+@csrf_protect
+def my_view_that_updates_pieFact(request):
+    if request.method == 'POST':
+        print(request.POST)
+        if 'latitude' in request.POST:
+            # doSomething with pieFact here...
+            print("HIIIIIIIIIIII")
+            print(request.POST['latitude'])
+            request.session['longitude']=request.POST['longitude']
+            request.session['latitude']=request.POST['latitude']
+            return HttpResponse('success') # if everything is OK
+    # nothing went well
+    return HttpResponse('FAIL!!!!!')
+
+
+
+
+class add_products(View):
+    def get(self,request):
+        categories=Categorie.get_all_categories()
+        return render(request, 'add_products.html',{'categories': categories})
+    
+    def post(self,request):
+        postData=request.POST
+        name=postData.get("name")
+        price=postData.get("price")
+        quantity=postData.get("quantity")
+        description=postData.get("description")
+        image_name= request.FILES['img']
+        fs = FileSystemStorage()
+        filename = fs.save(image_name.name, image_name)
+        print(image_name)
+        category_id=postData.get("category")
+        seller_id=request.session["customer_id"]
+        seller=Customer.get_customer_by_id(seller_id)
+        category=Categorie.get_category_by_id(category_id)
+        product=Product(name=name,price=price,category=category,description=description,image=filename,quantity=quantity)#,seller = seller)
+        product.save_product()
+        return HttpResponseRedirect(self.request.path_info) 
