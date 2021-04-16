@@ -1,0 +1,66 @@
+{% extends 'base3.html' %}
+
+
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<div class="container">
+<div class="p-4 m-4">
+    <div class="col-lg-6 mx-auto border rounded mt-4 pt-5">
+      <h3 class="alert alert-light border rounded">Add Products to Sell</h3>
+      <form action="/add_products_retailer" enctype="multipart/form-data" method= "POST">
+        {% csrf_token %}
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+         {{error}}
+        </div>
+       {% endif %}
+        <div class="form-group">
+          <label for="">Product Name</label>
+          <input type="text" name="name" id="" value="{{values.name}}" class="form-control" placeholder="type here" >
+          
+        </div>
+        <div class="form-group">
+          <label for="">Price</label>
+          <input type="text" name="price" id="" value="{{values.price}}" class="form-control" placeholder="type here" >
+          
+        </div>
+        <div class="form-group">
+          <label for="">Quantity</label>
+          <input type="text" name="quantity" id="" value="{{values.quantity}}" class="form-control" >
+          
+        </div>
+
+        <div class="form-group">
+          <label for="">Description</label>
+          <input type="text" name="description" id="" value="{{values.description}}" class="form-control"  >
+          
+        </div>
+        <div class="form-group"> 
+            <label for="img">Select image:</label>
+            <input type="file" id="img" name="img" accept="image/png, image/jpeg,image/*">
+        </div>
+        
+        <div class="form-group">
+          <label for="">Choose a Category:</label>
+          <select id="category" name="category">
+            {% for category in categories %}
+            <option value="{{category.id}}">{{category.name}}</option>
+            {% endfor %}
+          </select>
+        
+        </div>
+ 
+
+        <div class="formgroup mt-3 mx-auto">
+          <input class="btn btn-sm btn-info" type="submit" value="Add Product ">
+        </div>
+      </form>
+      
+       </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -230,12 +230,20 @@ class Signup(View):
             return render(request,'signup.html' , data)
 
 class Cart(View):
-    @method_decorator(auth_middleware)
+    #@method_decorator(auth_middleware)
     def get(self , request):
         ids = list(request.session.get('cart').keys())
         products = Product.get_products_by_id(ids)
         print(products)
         return render(request , 'cart.html' , {'products' : products} )
+
+class CartRetailer(View):
+    #@method_decorator(auth_middleware)
+    def get(self , request):
+        ids = list(request.session.get('cart').keys())
+        products = Product.get_products_by_id(ids)
+        print(products)
+        return render(request , 'cart_retailer.html' , {'products' : products} )
 
 
 class CheckOut(View):
@@ -258,8 +266,10 @@ class CheckOut(View):
                           quantity=cart.get(str(product.id)))
             order.placeOrder()
         request.session['cart'] = {}
-
-        return redirect('cart')
+        if(request.session['role']=='retailer'): 
+            return redirect('cart_retailer')
+        else:
+            return redirect('cart')
 
 
 class OrderView(View):
@@ -322,12 +332,47 @@ class add_products(View):
         product.save_product()
         return HttpResponseRedirect(self.request.path_info) 
 
+
+
+
+class add_products_retailer(View):
+    def get(self,request):
+        categories=Categorie.get_all_categories()
+        return render(request, 'add_products_retailer.html',{'categories': categories})
+    
+    def post(self,request):
+        postData=request.POST
+        name=postData.get("name")
+        price=postData.get("price")
+        quantity=postData.get("quantity")
+        description=postData.get("description")
+        image_name= request.FILES['img']
+        customer = request.session.get('customer_id')
+        fs = FileSystemStorage()
+        filename = fs.save(image_name.name, image_name)
+        print(image_name)
+        category_id=postData.get("category")
+        seller_id=request.session["customer_id"]
+        seller=Customer.get_customer_by_id(seller_id)
+        category=Categorie.get_category_by_id(category_id)
+        product=Product(seller=Customer(id=customer),name=name,price=price,category=category,description=description,image=filename,quantity=quantity)#,seller = seller)
+        product.save_product()
+        return HttpResponseRedirect(self.request.path_info) 
+
+
 class ProductsView(View):
     def get(self , request ):
         customer = request.session.get('customer_id')
         products = Product.get_products_by_seller(customer)
         print(products)
         return render(request , 'my_products.html'  , {'products' : products})
+
+class ProductsRetailerView(View):
+    def get(self , request ):
+        customer = request.session.get('customer_id')
+        products = Product.get_products_by_seller(customer)
+        print(products)
+        return render(request , 'my_products_retailer.html'  , {'products' : products})
         
 class Retailer_dashboard(View):
     def get(self ,request):

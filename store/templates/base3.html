@@ -43,11 +43,14 @@
             </li>
             {% if request.session.customer_id %}
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/my_products">My Products</a>
+              <a class="nav-link active" aria-current="page" href="/my_products_retailer">My Products</a>
               <span class="badge badge-info">{{request.session.cart.keys|length}}</span>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/add_products">Add Products</a>
+              <a class="nav-link active" aria-current="page" href="/add_products_retailer">Add Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/cart_retailer">Cart</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
