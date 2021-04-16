@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models.product import Product
 from .models.category import Categorie
 from .models.customer import Customer
+from .models.item import Item
 from .models.orders import Order
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -106,9 +107,9 @@ class Index(View):
         categories=Categorie.get_all_categories()
         categoryID=request.GET.get('category')
         if categoryID:
-            products=Product.get_all_products_by_categoryid(categoryID)
+            products=Product.get_by_category_and_role("retailer",categoryID)
         else:
-            products = Product.gete_all_products()
+            products = Product.get_all_products_by_roleOfSeller("retailer")
         data={}
         data['products']=products
         data['categories']=categories
@@ -309,6 +310,7 @@ class add_products(View):
         quantity=postData.get("quantity")
         description=postData.get("description")
         image_name= request.FILES['img']
+        customer = request.session.get('customer_id')
         fs = FileSystemStorage()
         filename = fs.save(image_name.name, image_name)
         print(image_name)
@@ -316,6 +318,58 @@ class add_products(View):
         seller_id=request.session["customer_id"]
         seller=Customer.get_customer_by_id(seller_id)
         category=Categorie.get_category_by_id(category_id)
-        product=Product(name=name,price=price,category=category,description=description,image=filename,quantity=quantity)#,seller = seller)
+        product=Product(seller=Customer(id=customer),name=name,price=price,category=category,description=description,image=filename,quantity=quantity)#,seller = seller)
         product.save_product()
         return HttpResponseRedirect(self.request.path_info) 
+
+class ProductsView(View):
+    def get(self , request ):
+        customer = request.session.get('customer_id')
+        products = Product.get_products_by_seller(customer)
+        print(products)
+        return render(request , 'my_products.html'  , {'products' : products})
+        
+class Retailer_dashboard(View):
+    def get(self ,request):
+        #return  render(request,'retailer_dashboard.html')
+        products = None
+        cart=request.session.get('cart')
+        if not cart:
+            request.session['cart']={}
+
+        categories=Categorie.get_all_categories()
+        categoryID=request.GET.get('category')
+        if categoryID:
+            products=Product.get_by_category_and_role("wholesaler",categoryID)
+        else:
+            products = Product.get_all_products_by_roleOfSeller("wholesaler")
+        data={}
+        data['products']=products
+        data['categories']=categories
+        #print(" you are :" ,request.session.get('email'))
+        return render(request , 'retailer_dashboard.html' , data)
+        
+    def post(self,request):
+        product=request.POST.get('product')
+        remove=request.POST.get('remove')
+        cart=request.session.get('cart')
+        if cart:
+            quantity=cart.get(product)
+            if quantity:
+                if remove:
+                    if(quantity<=1):
+                        cart.pop(product)
+                    else:
+                        cart[product]=quantity-1
+
+                else:
+                    cart[product]=1+quantity
+            else:
+                cart[product]=1
+        else:
+            cart={}
+            cart[product]=1
+        
+        
+        request.session['cart']=cart
+        return redirect('retailer_dashboard')

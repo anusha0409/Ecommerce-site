@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import signup,Login,Signup,otp_verify,Index,logout,Cart,CheckOut,OrderView,Locate,my_view_that_updates_pieFact,Wholesaler_dashboard
-from .views import add_products
+from .views import add_products, ProductsView,Retailer_dashboard
 from django.conf.urls import url
 from store.middlewares.auth import auth_middleware
 from django.utils.decorators import method_decorator
@@ -34,6 +34,9 @@ urlpatterns = [
     path('locate',Locate.as_view(),name="locate"),
     path('my_view_that_updates_pieFact', my_view_that_updates_pieFact),
     path('wholesaler_dashboard' ,Wholesaler_dashboard.as_view(),name="wholesaler_dashboard"),
-    path('add_products', add_products.as_view(),name='add_products')
+    path('add_products', add_products.as_view(),name='add_products'),
+    path('my_products', ProductsView.as_view()),
+    path('retailer_dashboard',Retailer_dashboard.as_view(),name="retailer_dashboard")
+
 
 ]
