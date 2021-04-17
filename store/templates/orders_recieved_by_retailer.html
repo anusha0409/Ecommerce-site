@@ -1,4 +1,4 @@
-{% extends 'base2.html' %}
+{% extends 'base3.html' %}
 
 {% block content %}
 <h1>Dashboard</h1>
@@ -40,7 +40,7 @@
                         <td>{{order.customer.first_name}}</td>
                         <td>{{order.order_status}}</td>
                         <td>
-                            <form action="/view_order" method="GET">
+                            <form action="/view_order2" method="GET">
                                 {% csrf_token %}
                                 <input hidden type="text" name="order" value='{{order.id}}'>
                                 <input type="submit" class="btn btn-info" value="View">

@@ -183,8 +183,9 @@ class Signup(View):
         retypepassword=postData.get('retypepassword')
         location=postData.get('location')
         group_name=postData.get('group_name')
-        latitude=request.session['latitude']
-        longitude=request.session['longitude']
+        if('latitude' in self.request.session):
+            latitude=self.request.session['latitude']
+            longitude=request.session['longitude']
         print("group name is   ",group_name)
         #validation
         error_message = None
@@ -288,7 +289,7 @@ class orders_given_by_retailer(View):
      def get(self , request ):
         customer = request.session.get('customer_id')
         orders = Order.get_orders_by_customer(customer)
-        print(orders)
+        #print(orders)
         return render(request , 'orders_given_by_retailer.html'  , {'orders' : orders})
 
 
@@ -297,16 +298,44 @@ class Wholesaler_dashboard(View):
     def get(self ,request):
         customer = request.session.get('customer_id')
         orders = Order.get_orders_by_seller(customer)
-        print(orders)
-        return  render(request,'wholesaler_dashboard.html' , {'orders' : orders})
+        #print(orders)
+        if(request.session['role']=='wholesaler'):
+            return render(request,'wholesaler_dashboard.html',{"orders": orders})
+        elif(request.session['role']=='retailer'):
+            return render(request,'orders_recieved_by_retailer.html',{"orders": orders})
+
+
+
     
 
 class view_order(View):
     def get(self,request):
-        print(request.GET)
+        #print(request.GET)
         order_id=request.GET.get('order')
         order=Order.objects.get(id=order_id)
-        return render(request,'view_order.html',{"order": order})
+        print(order.order_status)
+        print(order.mode)
+        if(request.session['role']=='wholesaler'):
+            return render(request,'view_order.html',{"order": order})
+        elif(request.session['role']=='retailer'):
+            return render(request,'view_order2.html',{"order": order})
+
+    
+
+    def post(self,request):
+        order_id=request.POST.get('order')
+        status=request.POST.get('order_status')
+        order=Order.objects.get(id=order_id)
+        order.order_status=status
+        print(order.order_status)
+        order.save()
+        if(request.session['role']=='wholesaler'):
+            return render(request,'view_order.html',{"order": order})
+        elif(request.session['role']=='retailer'):
+            return render(request,'view_order2.html',{"order": order})
+
+
+
 
 
 @csrf_protect

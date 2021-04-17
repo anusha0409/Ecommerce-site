@@ -31,7 +31,7 @@ urlpatterns = [
     path('logout',logout,name='logout'),
     path('cart', Cart.as_view(),name="cart"),
     path('check-out', CheckOut.as_view(),name="checkout"),
-    path('orders',auth_middleware( OrderView.as_view()),name="orders"),
+    path('orders', OrderView.as_view(),name="orders"),
     path('locate',Locate.as_view(),name="locate"),
     path('my_view_that_updates_pieFact', my_view_that_updates_pieFact),
     path('wholesaler_dashboard' ,Wholesaler_dashboard.as_view(),name="wholesaler_dashboard"),
@@ -42,7 +42,9 @@ urlpatterns = [
     path('retailer_dashboard',Retailer_dashboard.as_view(),name="retailer_dashboard"),
     path('cart_retailer',CartRetailer.as_view(),name='cart_retailer'),
     path('orders_given_by_retailer' , orders_given_by_retailer.as_view()),
-    path('view_order', view_order.as_view())
+    path('view_order', view_order.as_view()),
+    path('view_order2', view_order.as_view()),
+    path('orders_recieved_by_retailer', Wholesaler_dashboard.as_view())
 
 
 ]

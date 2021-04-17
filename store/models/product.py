@@ -52,7 +52,7 @@ class Product(models.Model):
     @staticmethod
     def get_by_category_and_role(group_name, category_id):
         products= Product.get_all_products_by_categoryid(category_id)
-        print(products)
+        #print(products)
         data = []
         for product in products:
             seller_id=product.seller.id
