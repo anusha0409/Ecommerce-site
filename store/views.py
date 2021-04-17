@@ -284,12 +284,30 @@ class Locate(View):
         return render(request,"locate.html")
 
 
+class orders_given_by_retailer(View):
+     def get(self , request ):
+        customer = request.session.get('customer_id')
+        orders = Order.get_orders_by_customer(customer)
+        print(orders)
+        return render(request , 'orders_given_by_retailer.html'  , {'orders' : orders})
 
 
 
 class Wholesaler_dashboard(View):
     def get(self ,request):
-        return  render(request,'wholesaler_dashboard.html')
+        customer = request.session.get('customer_id')
+        orders = Order.get_orders_by_seller(customer)
+        print(orders)
+        return  render(request,'wholesaler_dashboard.html' , {'orders' : orders})
+    
+
+class view_order(View):
+    def get(self,request):
+        print(request.GET)
+        order_id=request.GET.get('order')
+        order=Order.objects.get(id=order_id)
+        return render(request,'view_order.html',{"order": order})
+
 
 @csrf_protect
 def my_view_that_updates_pieFact(request):

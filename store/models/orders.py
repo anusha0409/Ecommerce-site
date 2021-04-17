@@ -3,6 +3,15 @@ from .product import Product
 from .customer import Customer
 import datetime
 
+status = (
+    ('Order Placed','Order Placed'),
+    ('Order Dispatched', 'Order Dispatched'),
+    ('In transit','In transit'),
+    ('Delivered','Delivered')
+)
+
+d/ Order
+Dispatched/ In transit/ Delivered)
 
 class Order(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
@@ -13,10 +22,31 @@ class Order(models.Model):
     phone = models.CharField(max_length=50, default='', blank=True)
     date = models.DateField(default=datetime.datetime.today)
     status = models.BooleanField(default=False)
+    #status = models.CharField(max_length=6, choices=COLOR_CHOICES, default='green')
+
 
     def placeOrder(self):
         self.save()
 
     @staticmethod
+    def gete_all_orders():
+        return Order.objects.all().order_by('-date')
+
+    @staticmethod
     def get_orders_by_customer(customer_id):
         return Order.objects.filter(customer=customer_id).order_by('-date')
+
+    @staticmethod
+    def get_orders_by_seller(customer_id):
+        data = []
+        orders=Order.gete_all_orders()
+        for order in orders:
+            product_id=order.product.id
+            print(product_id)
+            obj = Product.objects.get(id=product_id)
+            print(obj)
+            if(obj.seller.id == customer_id):
+                data.append(order)
+        return data
+
+    
