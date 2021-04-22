@@ -486,15 +486,15 @@ class Retailer_dashboard(View):
                     if(quantity<=1):
                         cart.pop(product)
                     else:
-                        cart[product]=quantity-1
+                        cart[product]=quantity-10
 
                 else:
-                    cart[product]=1+quantity
+                    cart[product]=10+quantity
             else:
-                cart[product]=1
+                cart[product]=10
         else:
             cart={}
-            cart[product]=1
+            cart[product]=10
         
         
         request.session['cart']=cart
