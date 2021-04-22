@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import signup,Login,Signup,otp_verify,Index,logout,Cart,CheckOut,OrderView,Locate,my_view_that_updates_pieFact,Wholesaler_dashboard
+from .views import signup,Login,Signup,otp_verify,Index,logout,Cart,CheckOut,OrderView,Locate,my_view_that_updates_pieFact,Wholesaler_dashboard, payment
 from .views import add_products, ProductsView,Retailer_dashboard, add_products_retailer,ProductsRetailerView,CartRetailer, orders_given_by_retailer
-from .views import view_order
+from .views import view_order,feedback
 from django.conf.urls import url
 from store.middlewares.auth import auth_middleware
 from django.utils.decorators import method_decorator
@@ -41,10 +41,14 @@ urlpatterns = [
     path('my_products_retailer', ProductsRetailerView.as_view()),
     path('retailer_dashboard',Retailer_dashboard.as_view(),name="retailer_dashboard"),
     path('cart_retailer',CartRetailer.as_view(),name='cart_retailer'),
-    path('orders_given_by_retailer' , orders_given_by_retailer.as_view()),
+    path('orders_given_by_retailer' , orders_given_by_retailer.as_view(),name="orders_given_by_retailer"),
     path('view_order', view_order.as_view()),
     path('view_order2', view_order.as_view()),
-    path('orders_recieved_by_retailer', Wholesaler_dashboard.as_view())
+    path('orders_recieved_by_retailer', Wholesaler_dashboard.as_view()),
+    path('payment' ,payment),
+    path('feedback_retailer', feedback.as_view()),
+    path('feedback_customer', feedback.as_view()),
+
 
 
 ]

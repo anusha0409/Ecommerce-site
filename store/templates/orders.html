@@ -33,6 +33,15 @@
                     <td>{{order.quantity}}</td>
                     <td>{{order.quantity|multiply:order.price|currency}}</td>
                     <td>{{order.order_status}}</td>
+                    {%if order.order_status == "Delivered"%}
+                    <td>
+                        <form action="/feedback_customer" method="GET">
+                            {% csrf_token %}
+                            <input hidden type="text" name="order" value='{{order.id}}'>
+                            <input type="submit" class="btn btn-info" value="feedback">
+                          </form>
+                    </td>
+                    {%endif%}
                 </tr>
 
                 {% endfor %}

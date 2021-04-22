@@ -43,11 +43,6 @@ INSTALLED_APPS = [
     #otp
     "django_google_maps",  
     "geoposition",
-    #oauth login
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
 ]
 SITE_ID = 1
 

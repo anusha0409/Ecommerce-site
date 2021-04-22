@@ -22,8 +22,10 @@ from django.core.files.storage import FileSystemStorage
 
 random_otp=gen_otp()
 msg_body= f" Your eshop OTP is {random_otp} "
+msg_feedback="Dear customer, your order was successfully delivered today. Kindly provide your feedback on Apni Dukan's site. Keep shopping with us!"
 
-
+def payment(request):
+    return render(request, 'payment.html')
 
 def signup(request):
     if(request.method =='GET'):
@@ -326,6 +328,20 @@ class view_order(View):
         order_id=request.POST.get('order')
         status=request.POST.get('order_status')
         order=Order.objects.get(id=order_id)
+        quant=order.quantity
+        old_status=order.order_status
+        new_status=status
+        if(old_status=="Order Placed" and (new_status== 'Order Dispatched' or new_status == 'In transit' or new_status=='Delivered')):
+            product_id=order.product.id
+            obj = Product.objects.get(id=product_id)
+            obj.quantity=obj.quantity-quant
+            obj.save()
+        if(new_status =='Delivered'):
+            customer_id=order.customer.id
+            obj = Customer.objects.get(id=customer_id)
+            phone=obj.phone
+            user_phone="+91"+phone
+            send_sms(msg_feedback,"+17722131635", user_phone )
         order.order_status=status
         print(order.order_status)
         order.save()
@@ -335,6 +351,24 @@ class view_order(View):
             return render(request,'view_order2.html',{"order": order})
 
 
+class feedback(View):
+    def get(self,request):
+        order_id=request.GET.get('order')
+        order=Order.objects.get(id=order_id)
+        if(request.session['role']=='retailer'):
+            return render(request,'feedback_retailer.html',{"order": order})
+        elif(request.session['role']=='customer'):
+            return render(request,'feedback_customer.html',{"order": order})
+    def post(self,request):
+        order_id=request.POST.get('order')
+        feedback=request.POST.get('feedback')
+        order=Order.objects.get(id=order_id)
+        order.feedback=feedback
+        order.save()
+        if(request.session['role']=='retailer'):
+            return redirect('orders_given_by_retailer')
+        elif(request.session['role']=='customer'):
+            return redirect("orders")
 
 
 

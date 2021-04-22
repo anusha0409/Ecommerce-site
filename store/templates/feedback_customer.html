@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+
+
+<div >
+    <div  class="card mx-auto mb-10" id={{order.id}}  style="width: 25rem;">
+       <img width="300" height="300"  class="card-img-top" src="{{order.product.image.url}}" alt="">
+       <table>
+       
+           <tr>
+             <th>Product</th>
+             <td>{{order.product.name}}</td>
+           </tr>
+           <tr>
+           
+             <th>Date</th>
+             <td>{{order.date}}</td>
+           </tr>
+           <tr>
+               <th>Price</th>
+               <td>{{order.price|currency}}</td>
+             </tr>
+             <tr>
+               <th>Quantity</th>
+               <td>{{order.quantity}}</td>
+             </tr>
+             <tr>
+               <th>Total</th>
+               <td>{{order.quantity|multiply:order.price|currency}}</td>
+           </tr>
+                
+        
+           <tr>
+            <th>Mode of order</th>
+            <td>{{order.mode}}</td>
+        </tr>
+          {% if order.feedback|length == 0 %}
+           <tr>
+             <th>Write feedback</th>
+             <td> <form action="/feedback_retailer" method="POST">
+               {% csrf_token %}
+              <input type= "text" name="feedback" >
+               <input hidden type="text" name="order" value='{{order.id}}'>
+               <input type="submit" value="Submit">
+             </form>
+           </td>
+           </tr>
+           {%else%}
+           <tr>
+               <th>Previous Feedback    </th>
+               <td>{{order.feedback}}</td>
+           </tr>
+           {%endif%}
+         </table>
+       
+   
+   </div>
+       
+   
+   
+   </div>
+   
+
+
+
+
+
+{% endblock %}

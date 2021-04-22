@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<body style="background-color:#33475b;">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <div class="container">
@@ -14,43 +15,43 @@
          {{error}}
         </div>
        {% endif %}
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">First Name</label>
           <input type="text" name="firstname" id="" value="{{values.first_name}}" class="form-control" placeholder="type here" >
           
         </div>
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">Last Name</label>
           <input type="text" name="lastname" id="" value="{{values.last_name}}" class="form-control" placeholder="type here" >
           
         </div>
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">Phone number</label>
           <input type="phone" name="phone" id="" value="{{values.phone}}" class="form-control" placeholder="+91 **********" >
           
         </div>
 
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">Email</label>
           <input type="email" name="email" id="" value="{{values.email}}" class="form-control" placeholder="example@gmail.com" >
           
         </div>
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">Password</label>
           <input type="password" name="password" id="" class="form-control" placeholder="**********" >
           
         </div>
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">Retype Password</label>
           <input type="retypepassword" name="retypepassword" id="" class="form-control" placeholder="**********" >
           
         </div>
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">Location</label>
           <input type="location" name="location" value="{{values.location}}" class="form-control" placeholder="example - Shameerpet" >
           
         </div>
-        <div class="form-group">
+        <div class="form-group text-light">
           <label for="">Choose a role:</label>
           <select id="group_name" name="group_name">
             <option value="customer">Customer</option>
@@ -65,9 +66,8 @@
           <input class="btn btn-sm btn-info" type="submit" value="Create an Account ">
         </div>
       </form>
-      <p>Click the button to get your coordinates.</p>
-
-      <button onclick="getLocation()">Click the button to get your coordinates.</button>
+      <p>  </p>
+      <button class="btn-info" onclick="getLocation()">Get Coordinates</button>
       
       <p id="demo"></p>
       
@@ -125,5 +125,6 @@
 
 
 </div>
-
+<img src="/media/media/ApniDukaan_logo.jpg" class="rounded mx-auto d-block" alt="Apni Dukaan logo" style="width:400px;height:400px;">
+</body>
 {% endblock %}
