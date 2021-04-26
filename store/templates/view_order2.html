@@ -65,6 +65,21 @@
           <th>Mode of order</th>
           <td>{{order.mode}}</td>
       </tr>
+      {% if order.mode == "Offline"  %}
+      <tr>
+        <th>Pick up date</th>
+        <td>{{order.date_of_delivery}}</td>
+    </tr>
+    <tr>
+      <th>Pick up time</th>
+      <td>{{order.time_pickup}}</td>
+  </tr>
+  {% else %}
+  <tr>
+    <th>Delivery person</th>
+    <td>{{order.delivery_person_details}}</td>
+</tr>
+{%endif%}
       <tr>
         <th>Feedback</th>
         <td>{{order.feedback}}</td>

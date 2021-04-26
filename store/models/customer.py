@@ -56,6 +56,9 @@ class Customer(models.Model):
     def get_customer_by_role(group_name):
         return Customer.objects.filter(group_name = group_name)
 
+    #@staticmethod
+    #def get_all_customers
+
     
 
 

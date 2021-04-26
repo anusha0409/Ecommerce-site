@@ -9,12 +9,11 @@
 {% load cart %}
 {% load custom_filter %}
 
-<h1>Hello {{request.session.email}}</h1>
 <div class="container-fluid mt-4">
   <div class="row">
     <!--filter-->
     <div class="col-lg-3">
-      
+
         <div class="list-group">
           <a href="/retailer_dashboard" class="list-group-item list-group-item-action text-white bg-dark mb-3 fs-4">All Products</a>
           {% for category in categories %}
@@ -44,7 +43,7 @@
           </div>
           {% if product.quantity != 0%}
           <div class="card-footer p-0  ">
-          
+
             {%if product|is_in_cart:request.session.cart %}
             <div class="row no-gutters ">
               <form method="POST" action="retailer_dashboard#{{product.id}}" class="col-2">
@@ -64,12 +63,12 @@
             <form action="retailer_dashboard#{{product.id}}" method="POST" class="btn-block">
               {% csrf_token %}
               <input hidden type="text" name="product" value='{{product.id}}'>
-              <input type="submit" class="btn btn-light btn-block border btn form-control" value="Add to Cart">
+              <input type="submit" class="btn btn-dark btn-block border btn form-control" value="Add to Cart">
             </form>
             {% endif %}
           </div>
        {%endif%}
-      </div>  
+      </div>
 
       {% endfor %}
       </div>
@@ -78,4 +77,3 @@
 </div>
 
 {% endblock %}
-

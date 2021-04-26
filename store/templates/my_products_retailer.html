@@ -6,36 +6,36 @@
 {% load custom_filter %}
 <div class="container">
    <div class="border rounded p-4 m-4">
-        <p class="display-4 pl-4 ml-4">Your Products</p>
+        <p class="display-4 pl-4 ml-4" style="color: white;">Your Products</p>
         <hr>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Sno.</th>
-                    <th>Image</th>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
+                    <th style="color: white;">Sno.</th>
+                    <th style="color: white;">Image</th>
+                    <th style="color: white;">Product</th>
+                    <th style="color: white;">Price</th>
+                    <th style="color: white;">Quantity</th>
                 </tr>
             </thead>
             <tbody>
-                
+
                 {% for product in products %}
                 <tr>
-                    <td>{{forloop.counter}}</td>
-                    <td><img style="height: 80px;" class="rounded-circle" src="{{product.image.url}}" alt=""></td>
-                    <td>{{product.name}}</td>
-                    <td>{{product.price|currency}}</td>
-                    <td>{{product.quantity}}</td>
-                
+                    <td style="color: white;">{{forloop.counter}}</td>
+                    <td style="color: white;"><img style="height: 80px;" class="rounded-circle" src="{{product.image.url}}" alt=""></td>
+                    <td style="color: white;">{{product.name}}</td>
+                    <td style="color: white;">{{product.price|currency}}</td>
+                    <td style="color: white;">{{product.quantity}}</td>
+
                 </tr>
 
                 {% endfor %}
-               
+
             </tbody>
 
         </table>
-       
+
    </div>
 </div>
 

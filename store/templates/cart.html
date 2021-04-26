@@ -6,66 +6,67 @@
 {% load custom_filter %}
 <div class="container">
    <div class="border rounded p-4 m-4">
-        <p class="display-4 pl-4 ml-4">Your Cart</p>
+        <p class="display-4 pl-4 ml-4" style="color: white;">Your Cart</p>
         <hr>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Sno.</th>
-                    <th>Image</th>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
+                    <th style="color: white;">Sno.</th>
+                    <th style="color: white;">Image</th>
+                    <th style="color: white;">Product</th>
+                    <th style="color: white;">Price</th>
+                    <th style="color: white;">Quantity</th>
+                    <th style="color: white;">Total</th>
                 </tr>
             </thead>
             <tbody>
-                
+
                 {% for product in products %}
                 <tr>
-                    <td>{{forloop.counter}}</td>
-                    <td><img style="height: 80px;" class="rounded-circle" src="{{product.image.url}}" alt=""></td>
-                    <td>{{product.name}}</td>
-                    <td>{{product.price|currency}}</td>
-                    <td>{{product|cart_count:request.session.cart}}</td>
-                    <td>{{product|price_total:request.session.cart|currency}}</td>
+                    <td style="color: white;">{{forloop.counter}}</td>
+                    <td style="color: white;"><img style="height: 80px;" class="rounded-circle" src="{{product.image.url}}" alt=""></td>
+                    <td style="color: white;">{{product.name}}</td>
+                    <td style="color: white;">{{product.price|currency}}</td>
+                    <td style="color: white;">{{product|cart_count:request.session.cart}}</td>
+                    <td style="color: white;">{{product|price_total:request.session.cart|currency}}</td>
                 </tr>
 
                 {% endfor %}
-               
+
             </tbody>
 
             <tfoot>
                 <tr>
                     <th colspan="4"></th>
-                    <th class="" colspan="">Total</th>
-                    <th>{{products|total_cart_price:request.session.cart|currency}}</th>
+                    <th class="" colspan="" style="color: white;">Total</th>
+                    <th style="color: white;">{{products|total_cart_price:request.session.cart|currency}}</th>
                 </tr>
             </tfoot>
         </table>
         <hr>
         <div class="m-3 p-3 mx-auto">
-          <button type="button" class="btn btn-primary"
+          <button type="button" class="btn btn-dark"
            data-toggle="modal" data-target="#exampleModal">
-            Check out
+            Buy Online
+          </button>
+        </div>
+        <div class="m-3 p-3 mx-auto">
+          <button type="button" class="btn btn-dark"
+           data-toggle="modal" data-target="#exampleModal2">
+            Buy Offline
           </button>
         </div>
 
         <tfoot>
           <tr>
               <th colspan="4"></th>
-              <th class="" colspan="">Total</th>
-              <th>{{products|total_cart_price:request.session.cart|currency}}</th>
+              <th class="" colspan="" style="color: white;">Total</th>
+              <th style="color: white;">{{products|total_cart_price:request.session.cart|currency}}</th>
           </tr>
       </tfoot>
   </table>
   <hr>
-  <div class="m-3 p-3 mx-auto">
-    <button type="button" class="btn btn-primary"
-     data-toggle="modal" data-target="#exampleModal">
-      Buy Offline
-    </button>
-  </div>
+  
    </div>
 </div>
 
@@ -90,6 +91,7 @@
             <form action="/check-out" method="POST">
                 {% csrf_token %}
                 <div class="form-group">
+                  <input hidden type="text" name="mode" value='online'>
                   <label for="">Address</label>
                   <input type="text" name="address" id="" class="form-control" placeholder="" aria-describedby="helpId">
 
@@ -100,11 +102,10 @@
                     <label for="">Phone</label>
                     <input type="text" name="phone" id="" class="form-control" placeholder="" aria-describedby="helpId">
                   </div>
-                <li class="nav-item">
-                              <input type="submit" class="btn float-right btn-outline-info col-lg-6" value="Cash on Delivery">
-
-              <a class="nav-link active btn float-right btn-outline-info col-lg-6" aria-current="page" href="/payment">Pay now</a>
-            </li>
+                  <hr>
+                <input type="submit" class="btn float-right btn-outline-info col-lg-6" value="Cash on Delivery">
+<hr>
+              <a class=" active btn float-right btn-outline-info col-lg-6" aria-current="page" href="/payment">Pay now</a>
             </form>
           </div>
         </div>
@@ -112,6 +113,45 @@
       </div>
     </div>
   </div>
+  <div class="modal" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+              Check Out Form
+          </h5>
+          <hr>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="m-2 p-3">
+            <form action="/check-out" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <input hidden type="text" name="mode" value='offline'>
+                  <label for="">Date of pickup</label>
+                  <input type="date" name="date" id="" class="form-control" placeholder="" aria-describedby="helpId">
 
+                </div>
+
+
+                <div class="form-group">
+                    <label for="">Time of pickup</label>
+                    <input type="time" name="time" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                  </div>
+                  <hr>
+                <input type="submit" class="btn float-right btn-outline-info col-lg-6" value="Cash on Delivery">
+<hr>
+              <a class="active btn float-right btn-outline-info col-lg-6" aria-current="page" href="/payment">Pay now</a>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 {% endblock %}

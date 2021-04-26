@@ -10,10 +10,10 @@
 
     <title>Apni Dukaan- A one stop solution to all your needs</title>
   </head>
-  <body>
+  <body background="/media/media/background2.png">
 
     <!--navbar-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <img src="/media/media/apni Dukaan_navbarlogo.png" class="rounded mx-auto d-block" alt="Apni Dukaan logo" style="width:80px;height:80px;">
         <a class="navbar-brand text-light" href="/wholesaler_dashboard">Apni Dukaan</a>
@@ -25,25 +25,26 @@
             <li class="nav-item">
               <a class="nav-link active text-light" aria-current="page" href="#">Store</a>
             </li>
-            
+
           </ul>
 
           <ul class="navbar-nav d-flex">
-          
-            
+
+
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="/media/media/profile-picture-icon-0.jpg" alt="" width="30" height="24" class="d-inline-block align-text-bottom">
                 Profile
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">{{request.session.email}}</a></li>
+                <li><a class="dropdown-item" href="#">{{request.session.role}}</a></li>
               </ul>
             </li>
             {% if request.session.customer_id %}
+            <li class="nav-item">
+              <a class="nav-link active text-light" aria-current="page" href="/notifications_wholesaler">Notifications</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link active text-light" aria-current="page" href="/my_products">My Products</a>
 <!--              <span class="badge badge-info">{{request.session.cart.keys|length}}</span>-->
@@ -65,12 +66,12 @@
             {% endif %}
           </ul>
 
-         
+
         </div>
       </div>
     </nav>
 
-    
+
     {% block content %} {% endblock %}
 
     <!-- Optional JavaScript; choose one of the two! -->
@@ -94,4 +95,3 @@
     -->
   </body>
 </html>
-

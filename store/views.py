@@ -14,7 +14,7 @@ from store.middlewares.auth import auth_middleware
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
-
+import random
 
 
 # Create your views here.
@@ -23,6 +23,8 @@ from django.core.files.storage import FileSystemStorage
 random_otp=gen_otp()
 msg_body= f" Your eshop OTP is {random_otp} "
 msg_feedback="Dear customer, your order was successfully delivered today. Kindly provide your feedback on Apni Dukan's site. Keep shopping with us!"
+
+delivery_men=["Vimal Prakash , 9876543211" , "Bharat Solanki , 9897001112" , "Rakesh Singh , 9897119900" , "Sher Singh , 9090887711 "]
 
 def payment(request):
     return render(request, 'payment.html')
@@ -166,6 +168,7 @@ class Login(View):
                 print("current user role is ",request.session['role'] )
                 user_phone="+91"+customer.phone
                 send_sms(msg_body,"+17722131635", user_phone )
+                print(msg_body)
                 return redirect('otp_verification')
 
         else:
@@ -238,7 +241,17 @@ class Cart(View):
         ids = list(request.session.get('cart').keys())
         products = Product.get_products_by_id(ids)
         print(products)
-        return render(request , 'cart.html' , {'products' : products} )
+        customers=Customer.get_customer_by_role('retailer')
+        print("latitude    ", "longitude")
+        latitudes=[]
+        longitudes=[]
+        for customer in customers:
+            latitudes.append(customer.latitude)
+            longitudes.append(customer.longitude)
+            print(customer.latitude,customer.longitude)
+      
+        
+        return render(request , 'cart.html' , {'products' : products, 'customers' : customers, } )
 
 class CartRetailer(View):
     #@method_decorator(auth_middleware)
@@ -251,28 +264,56 @@ class CartRetailer(View):
 
 class CheckOut(View):
     def post(self, request):
-        address = request.POST.get('address')
-        phone = request.POST.get('phone')
-        customer = request.session.get('customer_id')
+        mode=request.POST.get('mode')
+        print(mode)
+        if(mode =="online"):
+            address = request.POST.get('address')
+            phone = request.POST.get('phone')
+            
+            customer = request.session.get('customer_id')
 
-        cart = request.session.get('cart')
-        products = Product.get_products_by_id(list(cart.keys()))
-        print(address, phone, customer, cart, products)
 
-        for product in products:
-            print(cart.get(str(product.id)))
-            order = Order(customer=Customer(id=customer),
-                          product=product,
-                          price=product.price,
-                          address=address,
-                          phone=phone,
-                          quantity=cart.get(str(product.id)))
-            order.placeOrder()
-        request.session['cart'] = {}
-        if(request.session['role']=='retailer'): 
-            return redirect('cart_retailer')
-        else:
-            return redirect('cart')
+            cart = request.session.get('cart')
+            products = Product.get_products_by_id(list(cart.keys()))
+            #print(address, phone, customer, cart, products)
+
+            for product in products:
+                order = Order(customer=Customer(id=customer),
+                            product=product,
+                            price=product.price,
+                            address=address,
+                            phone=phone,
+                            quantity=cart.get(str(product.id)))
+                order.placeOrder()
+            request.session['cart'] = {}
+            if(request.session['role']=='retailer'): 
+                return redirect('cart_retailer')
+            else:
+                return redirect('cart')
+        elif(mode =="offline"):
+            date=request.POST.get('date')
+            time=request.POST.get("time")
+            print(date, time)
+            customer = request.session.get('customer_id')
+            cart = request.session.get('cart')
+            products = Product.get_products_by_id(list(cart.keys()))
+            for product in products:
+                #print(cart.get(str(product.id)))
+                order = Order(customer=Customer(id=customer),
+                            product=product,
+                            price=product.price,
+                            quantity=cart.get(str(product.id)),
+                            date_of_delivery=date,
+                            time_pickup=time,
+                            mode="Offline"
+                            )
+                order.placeOrder()
+            request.session['cart'] = {}
+            if(request.session['role']=='retailer'): 
+                return redirect('cart_retailer')
+            else:
+                return redirect('cart')
+
 
 
 class OrderView(View):
@@ -336,12 +377,18 @@ class view_order(View):
             obj = Product.objects.get(id=product_id)
             obj.quantity=obj.quantity-quant
             obj.save()
+        if(new_status == 'In transit'):
+            l=len(delivery_men)
+            i=random.randint(0,l-1)
+            order.delivery_person_details=delivery_men[i]
+            order.save()
         if(new_status =='Delivered'):
             customer_id=order.customer.id
             obj = Customer.objects.get(id=customer_id)
             phone=obj.phone
             user_phone="+91"+phone
             send_sms(msg_feedback,"+17722131635", user_phone )
+            print(msg_feedback)
         order.order_status=status
         print(order.order_status)
         order.save()
@@ -414,6 +461,14 @@ class add_products(View):
         return HttpResponseRedirect(self.request.path_info) 
 
 
+class notif(View):
+    def get(self,request):
+        customer = request.session.get('customer_id')
+        orders = Order.get_orders_by_seller(customer)
+        if (request.session['role']=='wholesaler'):
+            return render(request,'notifications_wholesaler.html',{"orders": orders})
+        if (request.session['role']=='retailer'):
+            return render(request,'notifications_retailer.html',{"orders": orders})
 
 
 class add_products_retailer(View):

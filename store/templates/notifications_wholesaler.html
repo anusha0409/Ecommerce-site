@@ -1,0 +1,40 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!--filter-->
+
+    {% load custom_filter %}
+    <div class="container">
+       <div class="border rounded p-4 m-4">
+            <p class="display-4 pl-4 ml-4" style="color: white;">Notifications</p>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="color: white;">Sno.</th>
+                        <th  style="color: white;">Notification</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for order in orders %}
+                    {%   if order.mode == "Offline"   %}
+                    <tr>
+                        <td style="color: white;">{{forloop.counter}}</td>
+                        <td style="color: white;"> {{order.customer.first_name}} will be coming to pick up {{order.product.name}} at {{order.time_pickup}} on {{order.date_of_delivery}}</td>
+                      
+                    </tr>
+                    {%endif%}
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+       </div>
+    </div>
+
+{% endblock %}

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import signup,Login,Signup,otp_verify,Index,logout,Cart,CheckOut,OrderView,Locate,my_view_that_updates_pieFact,Wholesaler_dashboard, payment
 from .views import add_products, ProductsView,Retailer_dashboard, add_products_retailer,ProductsRetailerView,CartRetailer, orders_given_by_retailer
-from .views import view_order,feedback
+from .views import view_order,feedback,notif
 from django.conf.urls import url
 from store.middlewares.auth import auth_middleware
 from django.utils.decorators import method_decorator
@@ -48,6 +48,8 @@ urlpatterns = [
     path('payment' ,payment),
     path('feedback_retailer', feedback.as_view()),
     path('feedback_customer', feedback.as_view()),
+    path('notifications_wholesaler', notif.as_view()),
+    path('notifications_retailer', notif.as_view())
 
 
 
