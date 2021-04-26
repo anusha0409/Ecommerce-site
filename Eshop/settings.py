@@ -167,28 +167,11 @@ EMAIL_PAGE_TEMPLATE = 'confirm_template.html'
 EMAIL_PAGE_DOMAIN = 'http://mydomain.com/'
 
 # For Django Email Backend
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mymail@gmail.com'
-EMAIL_HOST_PASSWORD = 'mYC00lP4ssw0rd'  # os.environ['password_key'] suggested
-EMAIL_USE_TLS = True
-
-# clientid
- #667231863168-il9psmj97qj7uhfjao2hhbs57c499u2b.apps.googleusercontent.com
- #secret
- #2eyQrmr2guJNH_CWL424yelT
 
 
- #trilio creds
- #SID AC95f177e36ef0c9e96dd113ccf275293b
- # token 5e91cdc06c825aff50d63b940fa4552f
- #
- # +17722131635
 
-GOOGLE_MAPS_API_KEY="AIzaSyBktZHZNrB2Er0ijw9GMx12k4KuLXP-YCw"
-GEOPOSITION_GOOGLE_MAPS_API_KEY="AIzaSyBktZHZNrB2Er0ijw9GMx12k4KuLXP-YCw"
-
+GOOGLE_MAPS_API_KEY=""
+GEOPOSITION_GOOGLE_MAPS_API_KEY=""
 GEOPOSITION_MAP_OPTIONS = {
     'minZoom': 3,
     'maxZoom': 15,
