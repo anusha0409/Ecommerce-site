@@ -17,8 +17,8 @@ def gen_otp():
 
 
 def send_sms(body_,from__, to_):
-    account_sid = 'AC95f177e36ef0c9e96dd113ccf275293b'
-    auth_token = '5e91cdc06c825aff50d63b940fa4552f'
+    account_sid = ''
+    auth_token = ''
     client = Client(account_sid, auth_token)
     message = client.messages \
                 .create(
